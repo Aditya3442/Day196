@@ -1,0 +1,22 @@
+class Solution {
+    public TreeNode recur(int prestart , int preend , int[] preorder , int poststart , int[] postorder , Map<Integer , Integer> map) {
+        if(prestart > preend)
+          return null;
+        TreeNode root = new TreeNode(preorder[prestart]);
+        if(prestart == preend)
+          return root;
+        int pos = map.get(preorder[prestart + 1]);
+        int nodes = pos - poststart + 1;
+        root.left = recur(prestart + 1 , nodes + prestart , preorder , poststart , postorder , map);
+        root.right = recur(prestart + nodes + 1 , preend , preorder , pos + 1 , postorder , map);
+        return root;
+    }
+    public TreeNode constructFromPrePost(int[] preorder, int[] postorder) {
+        Map<Integer , Integer> map = new HashMap<>();
+        for(int i = 0; i < postorder.length; i++) {
+            map.put(postorder[i] , i);
+        }
+        TreeNode root = recur(0 , preorder.length - 1 , preorder , 0 , postorder , map);
+        return root;
+    }
+}
